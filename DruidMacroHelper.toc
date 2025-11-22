@@ -1,0 +1,20 @@
+## Interface: 30400
+## Title: DruidMacroHelper
+## Version: 1.2.6
+## Author: Mylaerla-Everlook
+## Notes: Helper-Functions for creating efficient druid macros
+## X-Curse-Project-ID: 515355
+## X-Wago-ID: R4N2yaGL
+## DefaultState: enabled
+
+Locale\enUS.lua
+Locale\deDE.lua
+Locale\esES.lua
+Locale\frFR.lua
+Locale\itIT.lua
+Locale\ptBR.lua
+Locale\ruRU.lua
+Locale\koKR.lua
+Locale\zhCN.lua
+
+DruidMacroHelper.lua
