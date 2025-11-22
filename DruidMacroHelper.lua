@@ -1,7 +1,7 @@
 local _, L = ...;
 local DRUID_MACRO_HELPER_LOC_IGNORED = { "SCHOOL_INTERRUPT", "DISARM", "PACIFYSILENCE", "SILENCE", "PACIFY" };
 local DRUID_MACRO_HELPER_LOC_SHIFTABLE = { "ROOT" };
-local DRUID_MACRO_HELPER_LOC_STUN = { "STUN", "STUN_MECHANIC", "FEAR", "CHARM", "CONFUSE", "POSSESS" };
+local DRUID_MACRO_HELPER_LOC_STUN = { "CROWD_CONTROL_MECHANIC_BANISHED", "CROWD_CONTROL_MECHANIC_STUNNED", "CROWD_CONTROL_MECHANIC_CHARMED", "CROWD_CONTROL_MECHANIC_DISORIENTED", "CROWD_CONTROL_MECHANIC_POSSESS", "CROWD_CONTROL_MECHANIC_ASLEEP", "CROWD_CONTROL_MECHANIC_SAPPED", "CROWD_CONTROL_MECHANIC_INCAPACITATED", "CROWD_CONTROL_MECHANIC_CYCLONED", "CROWD_CONTROL_MECHANIC_FLEEING", "CROWD_CONTROL_MECHANIC_HORRIFIED" };
 local CAT_FORM_SPELL_ID = 1100768;
 
 DruidMacroHelper = {};
@@ -112,7 +112,7 @@ function DruidMacroHelper:OnSlashHelp(parameters)
 end
 
 function DruidMacroHelper:OnSlashStart(parameters)
-  -- self:OnSlashStun(parameters);
+  self:OnSlashStun(parameters);
   self:OnSlashGcd(parameters);
   self:OnSlashMana(parameters);
   self:OnSlashCooldown(parameters);
@@ -262,23 +262,36 @@ function DruidMacroHelper:OnSlashDebug(parameters)
 end
 
 function DruidMacroHelper:IsStunned()
-  local i = C_LossOfControl.GetActiveLossOfControlDataCount();
-  while (i > 0) do
-    local locData = C_LossOfControl.GetActiveLossOfControlData(i);
-    if (tContains(DRUID_MACRO_HELPER_LOC_STUN, locData.locType)) then
+  self:LogDebug("Checking crowd control effects...");
+  for ccId, _ in pairs(C_CrowdControl.Active) do
+    self:LogDebug("CC Id:", ccId);
+    self:LogDebug(CROWD_CONTROL_DATA[ccId].display);
+    if (tContains(DRUID_MACRO_HELPER_LOC_STUN, CROWD_CONTROL_DATA[ccId].display)) then
       return true;
     end
-    i = i - 1;
   end
+  -- self:LogDebug(CROWD_CONTROL_DATA);
+  -- for ccType, ccData in pairs(CROWD_CONTROL_DATA) do
+  --   self:LogDebug("CC Type:", ccType);
+  --   self:LogDebug("CC Data Table:", ccData);
+  -- end
+  -- local i = C_LossOfControl.GetActiveLossOfControlDataCount();
+  -- while (i > 0) do
+  --   local locData = C_LossOfControl.GetActiveLossOfControlData(i);
+  --   if (tContains(DRUID_MACRO_HELPER_LOC_STUN, locData.locType)) then
+  --     return true;
+  --   end
+  --   i = i - 1;
+  -- end
 
-  i = 40
-  while (i > 0) do
-    local name,_,_,_,_,_,_,_,_,spellId = UnitDebuff("player",i);
-    if spellId == 38509 then -- https://tbc.wowhead.com/spell=38509/shock-blast
-      return true;
-    end
-    i = i - 1;
-  end
+  -- i = 40
+  -- while (i > 0) do
+  --   local name,_,_,_,_,_,_,_,_,spellId = UnitDebuff("player",i);
+  --   if spellId == 38509 then -- https://tbc.wowhead.com/spell=38509/shock-blast
+  --     return true;
+  --   end
+  --   i = i - 1;
+  -- end
 
   return false;
 end
